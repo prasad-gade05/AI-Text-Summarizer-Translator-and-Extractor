@@ -23,7 +23,7 @@ This project is a web-based application that provides a suite of tools for text 
 
     ```bash
     git clone https://github.com/prasad-gade05/AI-Text-Summarizer-Translator-and-Extractor.git
-    cd AiTextOperations
+    cd AI-Text-Summarizer-Translator-and-Extractor
     ```
 
 2.  **Create a virtual environment:**
