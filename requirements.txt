@@ -1,0 +1,7 @@
+eel
+googletrans==3.1.0a0
+transformers
+torch
+Pillow
+pytesseract
+PyPDF2

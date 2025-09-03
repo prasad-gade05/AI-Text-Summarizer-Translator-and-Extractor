@@ -1,0 +1,16 @@
+# Virtual environment
+venv/
+__pycache__/
+
+# IDE files
+.idea/
+
+# Distribution / packaging
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

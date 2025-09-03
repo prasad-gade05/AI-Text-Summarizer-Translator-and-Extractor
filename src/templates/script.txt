@@ -1,0 +1,256 @@
+var isTop = true;
+var menuIsOpen = false;
+
+var menuIcon = $(".va_menu_icon");
+
+var one = $("#one");
+var two = $("#two");
+var three = $("#three");
+var four = $("#four");
+
+menuIcon.click(function () {
+  if (isTop === true) {
+    $("#nav").animate({ top: "50%", left: "50%" }, 400);
+    $(".content").animate({ opacity: "0" }, 700);
+    showBubbles();
+    isTop = false;
+  } else {
+    if (menuIsOpen === false) {
+      showBubbles();
+    } else {
+      hideBubbles();
+    }
+  }
+});
+
+function showBubbles() {
+  menuIcon.addClass("is-active");
+
+  one.animate({ opacity: "1" }, 10);
+  two.animate({ opacity: "1" }, 10);
+  three.animate({ opacity: "1" }, 10);
+  four.animate({ opacity: "1" }, 10);
+
+  one.animate({ left: "140px" }, 110);
+  two.animate({ top: "140px" }, 200);
+  one.animate({ left: "130px" }, 100);
+  three.animate({ left: "-65px" }, 300);
+  two.animate({ top: "130px" }, 210);
+  four.animate({ top: "-65px" }, 400);
+  three.animate({ left: "-55px" }, 310);
+  four.animate({ top: "-55px" }, 400);
+
+  menuIsOpen = true;
+}
+
+function hideBubbles() {
+  menuIcon.removeClass("is-active");
+
+  setTimeout(function () {
+    $("#nav").animate({ top: "100px", left: "100px" }, 400);
+    $(".content").animate({ opacity: "1" }, 900);
+  }, 500);
+  four.animate({ top: "-65px" }, 400);
+  three.animate({ left: "-65px" }, 300);
+  four.animate({ top: "50%" }, 400);
+  two.animate({ top: "140px" }, 200);
+  three.animate({ left: "50%" }, 310);
+  one.animate({ left: "140px" }, 110);
+  two.animate({ top: "50%" }, 200);
+  one.animate({ left: "50%" }, 110);
+
+  menuIsOpen = false;
+  isTop = true;
+}
+
+$(".bubble").click(function () {
+  menuIcon.removeClass("is-active");
+  hideBubbles();
+  setTimeout(function () {
+    $("#nav").animate({ top: "100px", left: "100px" }, 400);
+  }, 500);
+  isTop = true;
+});
+
+one.click(function () {
+  moveToPage("0", "100vw", "-100vw", "-100vw");
+});
+
+two.click(function () {
+  moveToPage("100vw", "0", "-100vw", "-100vw");
+});
+
+three.click(function () {
+  moveToPage("100vw", "100vw", "0", "-100vw");
+});
+
+four.click(function () {
+  moveToPage("100vw", "100vw", "-100vw", "0");
+});
+
+function moveToPage(firstLeft, secondTop, thirdLeft, fourthTop) {
+  $(".first").animate({ left: firstLeft }, 400);
+  $(".second").animate({ top: secondTop }, 400);
+  $(".third").animate({ left: thirdLeft }, 400);
+  $(".fourth").animate({ top: fourthTop }, 400);
+
+  isTop = true;
+}
+
+//TRANSLATOR
+
+$(document).ready(function () {
+    // Function to toggle the visibility of the dropdown list
+    function toggleDropdownList(dropdown) {
+        var list = dropdown.find("ul");
+        list.toggle();
+    }
+
+    // Function to filter the dropdown list based on the search input
+    function filterDropdownList(dropdown, searchValue) {
+        var list = dropdown.find("ul");
+        list.find("li").each(function () {
+            var optionValue = $(this).text().toLowerCase();
+            var isMatch = optionValue.includes(searchValue);
+            $(this).toggle(isMatch);
+        });
+    }
+
+    // Event listeners for input language dropdown
+    $("#input-language-dropdown input").on("focus", function () {
+        toggleDropdownList($("#input-language-dropdown"));
+    });
+
+    $("#input-language-dropdown input").on("input", function () {
+        var searchValue = $(this).val().toLowerCase();
+        filterDropdownList($("#input-language-dropdown"), searchValue);
+    });
+
+    $("#input-language-dropdown ul").on("click", "li", function () {
+        var selectedValue = $(this).attr("value");
+        $("#input-language-dropdown input").val($(this).text());
+        toggleDropdownList($("#input-language-dropdown"));
+    });
+
+    // Event listeners for output language dropdown
+    $("#output-language-dropdown input").on("focus", function () {
+        toggleDropdownList($("#output-language-dropdown"));
+    });
+
+    $("#output-language-dropdown input").on("input", function () {
+        var searchValue = $(this).val().toLowerCase();
+        filterDropdownList($("#output-language-dropdown"), searchValue);
+    });
+
+    $("#output-language-dropdown ul").on("click", "li", function () {
+        var selectedValue = $(this).attr("value");
+        $("#output-language-dropdown input").val($(this).text());
+        toggleDropdownList($("#output-language-dropdown"));
+    });
+});
+
+function loadFunctionJS() {
+    eel.getLanguagesPY();
+    eel.expose(translateJS);
+    eel.expose(loadLanguagesJS);
+}
+
+function loadLanguagesJS(languages, keys) {
+    langs = languages.split(',');
+    keys = keys.split(',');
+
+    populateDropdown("input-language", langs, keys);
+    populateDropdown("output-language", langs, keys);
+}
+
+function populateDropdown(dropdownId, languages, keys) {
+    const dropdown = $("#" + dropdownId + "-list");
+
+    dropdown.empty(); // Clear existing options
+
+    langs.forEach((lang, index) => {
+        const listItem = $("<li>");
+        listItem.attr("value", keys[index]);
+        listItem.text(lang);
+        dropdown.append(listItem);
+    });
+}
+
+function translateJS() {
+    sourceLang = ($("#input-language-dropdown input").val()).trim();
+    destLang = ($("#output-language-dropdown input").val()).trim();
+    ipText = $("#input-text").val();
+
+    eel.translatePY(ipText, sourceLang, destLang);
+    eel.expose(showTranslationJS);
+}
+
+function showTranslationJS(translatedText) {
+    $("#output-text").val(translatedText);
+}
+
+let intervalId;
+function summaryOpInterval()
+{
+    document.getElementById("summaryOutputText").value +=".";
+}
+
+//SUMMARIZER
+function summarizeTextJS() {
+   document.getElementById("summaryOutputText").value ="";
+  ipText = document.getElementById("summaryInputText").value;
+  wordRange = document.getElementById("wordRange").value;
+  let ipTextLen=ipText.length;
+  if(ipTextLen==0)
+  {
+    document.getElementById("summaryOutputText").value ="No Input text!!!!!";
+    return;
+  }
+  if((wordRange==1 && ipTextLen<330)||(wordRange==2&&ipTextLen<450)||(wordRange==3&&ipTextLen<600))
+  {
+    document.getElementById("summaryOutputText").value ="Cannot Summarize such a short text....(input a longer text)";
+    return;
+  }
+//  document.getElementById("summaryOutputText").value ="";
+  intervalId=setInterval(summaryOpInterval,300);
+  eel.summarizePY(ipText, wordRange);
+  eel.expose(showSummarizationJS);
+}
+
+function showSummarizationJS(summarizedText) {
+    clearTimeout(intervalId);
+    document.getElementById("summaryOutputText").value = summarizedText;
+}
+
+//EXTRACT
+
+function previewFileJS() {
+  filePath = document.getElementById("urlInput").value;
+  filePath = filePath.replace(/['"]/g, "");
+  eel.extractText(filePath);
+  eel.expose(displayResultJS);
+}
+
+function displayResultJS(extractedtext) {
+  var outputTextArea = document.getElementById("outputText");
+  outputTextArea.value = extractedtext;
+
+  // Calculate the number of lines (assuming average character width)
+  var lines = extractedtext.length / 50;
+
+  // Set the minimum height for the outputTextArea
+  var minHeight = 150;
+
+  // Calculate the height dynamically, ensuring it doesn't go below the minimum height
+  var calculatedHeight = Math.max(lines * 20, minHeight);
+
+  // Set the height of the outputTextArea dynamically
+  outputTextArea.style.height = calculatedHeight + "px";
+}
+
+function copyToClipboardJS(id) {
+  var outputText = document.getElementById(id);
+  outputText.select();
+  document.execCommand("copy");
+  alert("Text copied to clipboard!");
+}
